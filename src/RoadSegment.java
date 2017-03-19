@@ -30,8 +30,8 @@ public class RoadSegment
      */
     public RoadSegment(double x, double y, double width, double height, GameArena a)
     {
-        this.width = width;
-        this.height = height;
+        this.setWidth(width);
+        this.setHeight(height);
         arena = a;
 
         double roughWidth1 = x - width/2;
@@ -150,4 +150,32 @@ public class RoadSegment
         for (int i=0; i < parts.length; i++)
             arena.removeRectangle(parts[i]);
     }
+
+	/**
+	 * @return the width
+	 */
+	public double getWidth() {
+		return width;
+	}
+
+	/**
+	 * @param width the width to set
+	 */
+	public void setWidth(double width) {
+		this.width = width;
+	}
+
+	/**
+	 * @return the height
+	 */
+	public double getHeight() {
+		return height;
+	}
+
+	/**
+	 * @param height the height to set
+	 */
+	public void setHeight(double height) {
+		this.height = height;
+	}
 }
