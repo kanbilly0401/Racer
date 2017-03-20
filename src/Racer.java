@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.JComponent;
 
 /**
@@ -49,11 +52,16 @@ public class Racer {
 	private boolean playing = false;
 	private int score = 0;
 
+	private HighScoreView scoreFrame;
+	private Map<String, Integer> record;
+
 	/**
 	 * Creates a new instance of the Racer racing game.
 	 */
 	public Racer() {
 		arena = new GameArena(SCREEN_WIDTH, SCREEN_HEIGHT, false);
+		record = new HashMap<>();
+		scoreFrame = new HighScoreView();
 	}
 
 	/**
@@ -104,12 +112,13 @@ public class Racer {
 	}
 
 	/**
-	 * Stops a currently running game.
+	 * Stops a currently running game and display a high score table
 	 */
 	public void stop() {
 		if (playing) {
 			playing = false;
 			arena.exit();
+			scoreFrame.setVisible(true);
 		}
 	}
 
