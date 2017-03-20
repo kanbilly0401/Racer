@@ -90,7 +90,7 @@ public class GameDriver implements ActionListener {
 		r.start();
 		while (true) {
 			// make the racer able to render the graphical lock
-			r.getArena().pause();
+			r.pause();
 			while (r.isPlaying()) {
 				r.update();
 				// update the real time score

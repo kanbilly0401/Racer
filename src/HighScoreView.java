@@ -1,5 +1,6 @@
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.KeyListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -34,7 +35,51 @@ public class HighScoreView extends JFrame {
 		this.setResizable(false);
 		this.initialise();
 		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+	}
+
+	/**
+	 * Add key listener to the name field
+	 */
+	public void equipKeyListener(KeyListener listener) {
+		nameField.addKeyListener(listener);
+	}
+
+	/**
+	 * return the content of the text field
+	 */
+	public String name() {
+		return nameField.getText();
+	}
+
+	/**
+	 * Clear the content of the text field
+	 */
+	public void clearField() {
+		nameField.setText("");
+	}
+
+	/**
+	 * Set the enable option
+	 *
+	 * @param option
+	 */
+	public void enableOrNot(boolean option) {
+		nameField.setEnabled(option);
+	}
+
+	/**
+	 * Display the record at the right position
+	 *
+	 * @param i
+	 *            position
+	 * @param name
+	 *            player's name
+	 * @param score
+	 *            player's score
+	 */
+	public void display(int i, String name, int score) {
+		panel[i].setRecord(name, score);
 	}
 
 	/**

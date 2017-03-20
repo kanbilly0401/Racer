@@ -1,5 +1,9 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JComponent;
 
@@ -34,7 +38,7 @@ import javax.swing.JComponent;
  *
  * @author Joe Finney (joe@comp.lancs.ac.uk)
  */
-public class Racer {
+public class Racer implements KeyListener {
 	public static final double PLAYER_SPEED = 5;
 	public static final int ROAD_SEGMENT_WIDTH = 160;
 	public static final int ROAD_SEGMENT_HEIGHT = 10;
@@ -53,14 +57,14 @@ public class Racer {
 	private int score = 0;
 
 	private HighScoreView scoreFrame;
-	private Map<String, Integer> record;
+	private static Set<ScoreRecord> record;
 
 	/**
 	 * Creates a new instance of the Racer racing game.
 	 */
 	public Racer() {
 		arena = new GameArena(SCREEN_WIDTH, SCREEN_HEIGHT, false);
-		record = new HashMap<>();
+		record = new HashSet<>();
 		scoreFrame = new HighScoreView();
 	}
 
@@ -81,15 +85,6 @@ public class Racer {
 	 */
 	public int getScore() {
 		return score;
-	}
-
-	/**
-	 * Provides the scene of the game
-	 *
-	 * @return The scene of the game
-	 */
-	public GameArena getArena() {
-		return arena;
 	}
 
 	/**
@@ -118,8 +113,21 @@ public class Racer {
 		if (playing) {
 			playing = false;
 			arena.exit();
-			scoreFrame.setVisible(true);
+			arena.reset();
+			player.reset();
+			if (isTopTenScore()) {
+				scoreFrame.setVisible(true);
+				scoreFrame.enableOrNot(true);
+				scoreFrame.equipKeyListener(this);
+			}
 		}
+	}
+
+	/**
+	 * Pauses the game for the lock to be rendered
+	 */
+	public void pause() {
+		arena.pause();
 	}
 
 	/**
@@ -178,10 +186,6 @@ public class Racer {
 		arena.pause();
 	}
 
-	public void pause() {
-		arena.pause();
-	}
-
 	/**
 	 * Provides a randomly generated, thin slice of road. This method is used
 	 * periodically to create new road on the screen in front of the player's
@@ -224,5 +228,64 @@ public class Racer {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check whether the score can go to top 10
+	 *
+	 * @return whether it is in top 10 score
+	 */
+	private boolean isTopTenScore() {
+		ArrayList<ScoreRecord> list = new ArrayList<>(record);
+		Collections.sort(list);
+
+		// if there are less than 10 scores or it is larger
+		// than the smallest one
+		if (list.size() < 10 || list.get(0).getScore() < score)
+			return true;
+
+		return false;
+	}
+
+	/**
+	 * Display the score board into the frame
+	 */
+	private void display() {
+		ArrayList<ScoreRecord> list = new ArrayList<>(record);
+		Collections.sort(list);
+
+		int length = list.size();
+		for (int i = length - 1; i >= 0; i--) {
+			scoreFrame.display(length - i - 1, list.get(i).getName(),
+					list.get(i).getScore());
+		}
+	}
+
+	/**
+	 * Press the enter key to enter the name
+	 */
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			String name = scoreFrame.name();
+			if (name != null && name.length() != 0) {
+				this.scoreFrame.clearField();
+				this.scoreFrame.enableOrNot(false);
+				record.add(new ScoreRecord(name, score));
+				display();
+			}
+		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 }

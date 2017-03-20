@@ -412,7 +412,7 @@ public class GameArena {
 
 	/**
 	 * Gets the width of the GameArena window, in pixels.
-	 * 
+	 *
 	 * @return the width in pixels
 	 */
 	public int getArenaWidth() {
@@ -421,7 +421,7 @@ public class GameArena {
 
 	/**
 	 * Gets the height of the GameArena window, in pixels.
-	 * 
+	 *
 	 * @return the height in pixels
 	 */
 	public int getArenaHeight() {
@@ -430,7 +430,7 @@ public class GameArena {
 
 	/**
 	 * Determines if the user is currently pressing the cursor up button.
-	 * 
+	 *
 	 * @return true if the up button is pressed, false otherwise.
 	 */
 	public boolean upPressed() {
@@ -439,7 +439,7 @@ public class GameArena {
 
 	/**
 	 * Determines if the user is currently pressing the cursor down button.
-	 * 
+	 *
 	 * @return true if the down button is pressed, false otherwise.
 	 */
 	public boolean downPressed() {
@@ -448,7 +448,7 @@ public class GameArena {
 
 	/**
 	 * Determines if the user is currently pressing the cursor left button.
-	 * 
+	 *
 	 * @return true if the left button is pressed, false otherwise.
 	 */
 	public boolean leftPressed() {
@@ -457,7 +457,7 @@ public class GameArena {
 
 	/**
 	 * Determines if the user is currently pressing the cursor right button.
-	 * 
+	 *
 	 * @return true if the right button is pressed, false otherwise.
 	 */
 	public boolean rightPressed() {
@@ -466,10 +466,20 @@ public class GameArena {
 
 	/**
 	 * Acquires the JPanel containing this GameArena.
-	 * 
+	 *
 	 * @return The JPanel object containing this GameArena.
 	 */
 	public JFXPanel getPanel() {
 		return jfxPanel;
+	}
+
+	/**
+	 * Reset everything
+	 */
+	public void reset() {
+		up = false;
+		down = false;
+		left = false;
+		right = false;
 	}
 }
