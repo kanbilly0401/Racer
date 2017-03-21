@@ -3,15 +3,15 @@
 This is an improved version of an existing racing game.
 Please note that the latest version of Java is required to run the game.
 
-** How to use it? **
+### How to use it?
 Simply download the zip project or use git clone, import it into an IDE (eclipse or netbeans)
 
-** How to play with it? **
-Up arrow to speed up the car
-Down arrow to speed down the car
-left and right arrow keys to move the car
+### How to play with it?
+* Up arrow to speed up the car
+* Down arrow to speed down the car
+* left and right arrow keys to move the car
 
-** What features does it have? **
+### What features does it have?
 1. A working racer game.
 2. Play and stop button that enables the user to decide when to play or stop the game.
 3. A real time score display.
