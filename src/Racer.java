@@ -40,6 +40,7 @@ import javax.swing.JComponent;
  */
 public class Racer implements KeyListener {
 	public static final double PLAYER_SPEED = 5;
+	public static final double ROAD_WIND_DEGREE = 2.2;
 	public static final int ROAD_SEGMENT_WIDTH = 160;
 	public static final int ROAD_SEGMENT_HEIGHT = 10;
 	public static final int ROAD_CURVE_SPEED = 5;
@@ -113,13 +114,29 @@ public class Racer implements KeyListener {
 		if (playing) {
 			playing = false;
 			arena.exit();
-			arena.reset();
-			player.reset();
+			reset();
+			// if it is a top 10 score, display the table
 			if (isTopTenScore()) {
 				scoreFrame.setVisible(true);
 				scoreFrame.enableOrNot(true);
 				scoreFrame.equipKeyListener(this);
 			}
+		}
+	}
+
+	/**
+	 * Reset the attributes of the roles
+	 */
+	public void reset() {
+		arena.reset();
+		player.reset();
+
+		currentRoadX = SCREEN_WIDTH / 2;
+		road = new RoadSegment[SCREEN_HEIGHT / ROAD_SEGMENT_HEIGHT + 1];
+		// Create the initial road layout
+		for (int s = road.length - 1; s >= 0; s--) {
+			road[s] = nextRoadSegment();
+			road[s].setYPosition(s * ROAD_SEGMENT_HEIGHT);
 		}
 	}
 
@@ -152,28 +169,29 @@ public class Racer implements KeyListener {
 		if (playing) {
 			score++;
 
-			double xspeed = 0;
-			double yspeed = 0;
+			double car_speed = 0;
+			double road_speed = speed;
 			if (arena.leftPressed())
-				xspeed -= PLAYER_SPEED;
+				car_speed -= PLAYER_SPEED;
 
 			if (arena.rightPressed())
-				xspeed += PLAYER_SPEED;
+				car_speed += PLAYER_SPEED;
 
 			if (arena.upPressed())
-				yspeed -= PLAYER_SPEED;
+				road_speed += (speed * 1.5);
 
 			if (arena.downPressed())
-				yspeed += PLAYER_SPEED;
+				road_speed -= (speed * 0.5);
 
-			player.setXSpeed(xspeed);
-			player.setYSpeed(yspeed);
+			player.setXSpeed(car_speed);
 
 			player.move();
 
 			for (int i = 0; i < road.length; i++) {
-				if (road[i] != null)
+				if (road[i] != null) {
+					road[i].setYSpeed(road_speed);
 					road[i].move();
+				}
 			}
 
 			// Recycle any segments that have scrolled off screen...
@@ -194,7 +212,8 @@ public class Racer implements KeyListener {
 	 * @return A new randomly generated RoadSegment
 	 */
 	private RoadSegment nextRoadSegment() {
-		currentRoadX += Math.random() * 2 * ROAD_CURVE_SPEED - ROAD_CURVE_SPEED;
+		currentRoadX += Math.random() * ROAD_WIND_DEGREE * ROAD_CURVE_SPEED
+				- ROAD_CURVE_SPEED;
 		RoadSegment s = new RoadSegment(currentRoadX, -ROAD_SEGMENT_HEIGHT,
 				ROAD_SEGMENT_WIDTH, ROAD_SEGMENT_HEIGHT, arena);
 		s.setYSpeed(speed);

@@ -15,7 +15,7 @@ public class Car {
 	private double xSpeed;
 	private double ySpeed;
 
-	/* For recovery use */
+	/* For recovery use on each game */
 	private double x_position;
 	private double y_position;
 	private Rectangle[] origin_parts = new Rectangle[7];
@@ -39,6 +39,14 @@ public class Car {
 		parts[5] = new Rectangle(15, 18, 5, 5, "WHITE");
 		parts[6] = new Rectangle(45, 18, 5, 5, "WHITE");
 
+		arena = a;
+		this.setXPosition(x);
+		this.setYPosition(y);
+
+		for (int i = 0; i < parts.length; i++)
+			arena.addRectangle(parts[i]);
+
+		/* For recovery use */
 		origin_parts[0] = new Rectangle(10, 20, 10, 20, WHEEL_COLOUR);
 		origin_parts[1] = new Rectangle(10, 80, 10, 20, WHEEL_COLOUR);
 		origin_parts[2] = new Rectangle(50, 20, 10, 20, WHEEL_COLOUR);
@@ -47,15 +55,8 @@ public class Car {
 		origin_parts[5] = new Rectangle(15, 18, 5, 5, "WHITE");
 		origin_parts[6] = new Rectangle(45, 18, 5, 5, "WHITE");
 
-		arena = a;
-		this.setXPosition(x);
-		this.setYPosition(y);
-
 		x_position = x;
 		y_position = y;
-
-		for (int i = 0; i < parts.length; i++)
-			arena.addRectangle(parts[i]);
 	}
 
 	/**

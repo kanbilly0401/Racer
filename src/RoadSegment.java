@@ -3,153 +3,180 @@
  *
  * @author Joe Finney (joe@comp.lancs.ac.uk)
  */
-public class RoadSegment
-{
-    public static String ROUGH_COLOUR = "#00FF00";
-    public static String KERB_COLOUR = "#808080";
-    public static double KERB_WIDTH = 10;
+public class RoadSegment {
+	public static String ROUGH_COLOUR = "#00FF00";
+	public static String KERB_COLOUR = "#808080";
+	public static double KERB_WIDTH = 10;
 
-    private Rectangle[] parts = new Rectangle[4];
-    private double xPosition;
-    private double yPosition;
-    private double width;
-    private double height;
-    private GameArena arena;
+	private Rectangle[] parts = new Rectangle[4];
+	private double xPosition;
+	private double yPosition;
+	private double width;
+	private double height;
+	private GameArena arena;
 
-    private double xSpeed;
-    private double ySpeed;
+	private double xSpeed;
+	private double ySpeed;
 
-    /**
-     * Creates a new RoadSegment, at the given location and size.
-     *
-     * @param x The x position on the screen of the road segment.
-     * @param y The y position on the screen of the road segment.
-     * @param width The width of this road segment (in pixels)
-     * @param height The height of this road segment (in pixels)
-     * @param a The GameArena upon which to draw this road segment.
-     */
-    public RoadSegment(double x, double y, double width, double height, GameArena a)
-    {
-        this.setWidth(width);
-        this.setHeight(height);
-        arena = a;
+	/* For recovery use for each game */
+	private double x_position;
+	private double y_position;
+	private double original_width;
+	private double original_height;
+	private Rectangle[] origin_parts = new Rectangle[4];
 
-        double roughWidth1 = x - width/2;
-        double roughWidth2 = arena.getArenaWidth() - (x + width/2);
+	/**
+	 * Creates a new RoadSegment, at the given location and size.
+	 *
+	 * @param x
+	 *            The x position on the screen of the road segment.
+	 * @param y
+	 *            The y position on the screen of the road segment.
+	 * @param width
+	 *            The width of this road segment (in pixels)
+	 * @param height
+	 *            The height of this road segment (in pixels)
+	 * @param a
+	 *            The GameArena upon which to draw this road segment.
+	 */
+	public RoadSegment(double x, double y, double width, double height,
+			GameArena a) {
+		this.setWidth(width);
+		this.setHeight(height);
+		arena = a;
 
-        double roughX1 = -width/2 - roughWidth1/2;
-        double roughX2 =  width/2 + roughWidth2/2;
+		double roughWidth1 = x - width / 2;
+		double roughWidth2 = arena.getArenaWidth() - (x + width / 2);
 
-        parts[0] = new Rectangle(roughX1, height/2, roughWidth1, height, ROUGH_COLOUR);
-        parts[1] = new Rectangle(roughX2, height/2, roughWidth2, height, ROUGH_COLOUR);
-        parts[2] = new Rectangle(-width/2-KERB_WIDTH/2, height/2, KERB_WIDTH, height, KERB_COLOUR);
-        parts[3] = new Rectangle(width/2+KERB_WIDTH/2, height/2, KERB_WIDTH, height, KERB_COLOUR);
+		double roughX1 = -width / 2 - roughWidth1 / 2;
+		double roughX2 = width / 2 + roughWidth2 / 2;
 
-        this.setXPosition(x);
-        this.setYPosition(y);
+		parts[0] = new Rectangle(roughX1, height / 2, roughWidth1, height,
+				ROUGH_COLOUR);
+		parts[1] = new Rectangle(roughX2, height / 2, roughWidth2, height,
+				ROUGH_COLOUR);
+		parts[2] = new Rectangle(-width / 2 - KERB_WIDTH / 2, height / 2,
+				KERB_WIDTH, height, KERB_COLOUR);
+		parts[3] = new Rectangle(width / 2 + KERB_WIDTH / 2, height / 2,
+				KERB_WIDTH, height, KERB_COLOUR);
 
-        for (int i=0; i < parts.length; i++)
-            arena.addRectangle(parts[i]);
-    }
+		this.setXPosition(x);
+		this.setYPosition(y);
 
-    /**
-     * Changes the position of this RoadSegment to the given location
-     *
-     * @param x The new x positition of this RoadSegment on the screen.
-     */
-    public void setXPosition(double x)
-    {
-        double dx = x - xPosition;
+		for (int i = 0; i < parts.length; i++)
+			arena.addRectangle(parts[i]);
 
-        for (int i=0; i < parts.length; i++)
-            parts[i].setXPosition(parts[i].getXPosition() + dx);
+		/* For recovery use */
+		x_position = x;
+		y_position = y;
+		original_width = width;
+		original_height = height;
+		origin_parts[0] = new Rectangle(roughX1, height / 2, roughWidth1,
+				height, ROUGH_COLOUR);
+		origin_parts[1] = new Rectangle(roughX2, height / 2, roughWidth2,
+				height, ROUGH_COLOUR);
+		origin_parts[2] = new Rectangle(-width / 2 - KERB_WIDTH / 2,
+				height / 2, KERB_WIDTH, height, KERB_COLOUR);
+		origin_parts[3] = new Rectangle(width / 2 + KERB_WIDTH / 2, height / 2,
+				KERB_WIDTH, height, KERB_COLOUR);
 
-        xPosition = x;
-    }
+	}
 
-    /**
-     * Changes the position of this RoadSegment to the given location
-     *
-     * @param y The new y positition of this RoadSegment on the screen.
-     */
-    public void setYPosition(double y)
-    {
-        double dy = y - yPosition;
-        for (int i=0; i < parts.length; i++)
-            parts[i].setYPosition(parts[i].getYPosition() + dy);
+	/**
+	 * Changes the position of this RoadSegment to the given location
+	 *
+	 * @param x
+	 *            The new x positition of this RoadSegment on the screen.
+	 */
+	public void setXPosition(double x) {
+		double dx = x - xPosition;
 
-        yPosition = y;
-    }
+		for (int i = 0; i < parts.length; i++)
+			parts[i].setXPosition(parts[i].getXPosition() + dx);
 
-    /**
-     * Determines the position of this RoadSegment on the screen
-     *
-     * @return The x position of the centre of this RoadSegment on the screen.
-     */
-    public double getXPosition()
-    {
-        return xPosition;
-    }
+		xPosition = x;
+	}
 
-    /**
-     * Determines the position of this RoadSegment on the screen
-     *
-     * @return The y position of the centre of this RoadSegment on the screen.
-     */
-    public double getYPosition()
-    {
-        return yPosition;
-    }
+	/**
+	 * Changes the position of this RoadSegment to the given location
+	 *
+	 * @param y
+	 *            The new y positition of this RoadSegment on the screen.
+	 */
+	public void setYPosition(double y) {
+		double dy = y - yPosition;
+		for (int i = 0; i < parts.length; i++)
+			parts[i].setYPosition(parts[i].getYPosition() + dy);
 
-    /**
-     * Provides a list (array) containing all the GameArena Rectangle objects that
-     * make up this road segment.
-     *
-     * @return The list of Rectangles that makes up this RoadSegment 
-     */
-    public Rectangle[] getParts()
-    {
-        return parts;
-    }
+		yPosition = y;
+	}
 
-    /**
-     * Sets the speed of this RoadSegment in the X axis - i.e. the number of pixels it moves in the X axis every time move() is called.
-     *
-     * @param s The new speed of this RoadSegment in the x axis
-     */
-    public void setXSpeed(double s)
-    {
-        xSpeed = s;
-    }
+	/**
+	 * Determines the position of this RoadSegment on the screen
+	 *
+	 * @return The x position of the centre of this RoadSegment on the screen.
+	 */
+	public double getXPosition() {
+		return xPosition;
+	}
 
-    /**
-     * Sets the speed of this RoadSegment in the Y axis - i.e. the number of pixels it moves in the Y axis every time move() is called.
-     *
-     * @param s The new speed of this RoadSegment in the y axis
-     */
-    public void setYSpeed(double s)
-    {
-        ySpeed = s;
-    }
+	/**
+	 * Determines the position of this RoadSegment on the screen
+	 *
+	 * @return The y position of the centre of this RoadSegment on the screen.
+	 */
+	public double getYPosition() {
+		return yPosition;
+	}
 
-    /**
-     * Updates the position of this RoadSegment by a small amount, depending upon its speed.
-     * see setXSpeed(0 and setYSpeed() methods.
-     */
-    public void move()
-    {
-        this.setXPosition(xPosition + xSpeed);
-        this.setYPosition(yPosition + ySpeed);
-    }
+	/**
+	 * Provides a list (array) containing all the GameArena Rectangle objects
+	 * that make up this road segment.
+	 *
+	 * @return The list of Rectangles that makes up this RoadSegment
+	 */
+	public Rectangle[] getParts() {
+		return parts;
+	}
 
-    /**
-     * Delete all the Rectangles that make up this RoadSegment from the screen
-     */
-    public void remove()
-    {
-        for (int i=0; i < parts.length; i++)
-            arena.removeRectangle(parts[i]);
-    }
+	/**
+	 * Sets the speed of this RoadSegment in the X axis - i.e. the number of
+	 * pixels it moves in the X axis every time move() is called.
+	 *
+	 * @param s
+	 *            The new speed of this RoadSegment in the x axis
+	 */
+	public void setXSpeed(double s) {
+		xSpeed = s;
+	}
+
+	/**
+	 * Sets the speed of this RoadSegment in the Y axis - i.e. the number of
+	 * pixels it moves in the Y axis every time move() is called.
+	 *
+	 * @param s
+	 *            The new speed of this RoadSegment in the y axis
+	 */
+	public void setYSpeed(double s) {
+		ySpeed = s;
+	}
+
+	/**
+	 * Updates the position of this RoadSegment by a small amount, depending
+	 * upon its speed. see setXSpeed(0 and setYSpeed() methods.
+	 */
+	public void move() {
+		this.setXPosition(xPosition + xSpeed);
+		this.setYPosition(yPosition + ySpeed);
+	}
+
+	/**
+	 * Delete all the Rectangles that make up this RoadSegment from the screen
+	 */
+	public void remove() {
+		for (int i = 0; i < parts.length; i++)
+			arena.removeRectangle(parts[i]);
+	}
 
 	/**
 	 * @return the width
@@ -159,7 +186,8 @@ public class RoadSegment
 	}
 
 	/**
-	 * @param width the width to set
+	 * @param width
+	 *            the width to set
 	 */
 	public void setWidth(double width) {
 		this.width = width;
@@ -173,9 +201,25 @@ public class RoadSegment
 	}
 
 	/**
-	 * @param height the height to set
+	 * @param height
+	 *            the height to set
 	 */
 	public void setHeight(double height) {
 		this.height = height;
+	}
+
+	/**
+	 * Reset the road segment y speed and other attributes
+	 *
+	 * @param speed
+	 */
+	public void reset(double speed) {
+		this.setWidth(original_width);
+		this.setHeight(original_height);
+		this.setXPosition(x_position);
+		this.setYPosition(y_position);
+		this.setYSpeed(speed);
+		for (int i = 0; i < parts.length; i++)
+			parts[i].reset(origin_parts[i]);
 	}
 }
